@@ -1,34 +1,24 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.1
 import PackageDescription
 
 let package = Package(
     name: "MailCore",
+    platforms: [
+       .macOS(.v10_14)
+    ],
     products: [
         .library(name: "MailCore", targets: ["MailCore"]),
-        .library(name: "MailCoreTestTools", targets: ["MailCoreTestTools"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0-rc.2"),
-        .package(url: "https://github.com/vapor-community/sendgrid-provider.git", from: "3.0.3"),
-        .package(url: "https://github.com/LiveUI/VaporTestTools.git", .branch("master"))
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.0.0-beta"),
+        .package(url: "https://github.com/skelpo/sendgrid-provider.git", from: "4.0.0-beta"),
     ],
     targets: [
         .target(name: "MailCore", dependencies: [
             "Vapor",
             "SendGrid"
-            ]
-        ),
-        .target(name: "MailCoreTestTools", dependencies: [
-            "Vapor",
-            "VaporTestTools",
-            "MailCore"
-            ]
-        ),
-        .testTarget(name: "MailCoreTests", dependencies: [
-            "MailCore",
-            "MailCoreTestTools",
-            "VaporTestTools"
-            ]
-        )
+        ]),
+        .target(name: "Run", dependencies: ["MailCore"]),
+        .testTarget(name: "AppTests", dependencies: ["MailCore", "XCTVapor"])
     ]
 )
